@@ -1,0 +1,27 @@
+{
+  "name": "storytimeisland-book",
+  "description": "A book for the storytimeisland series",
+  "version": "0.0.3",
+  "keywords": [],
+  "dependencies": {
+    "component/emitter": "*",
+    "component/jquery": "*",
+    "component/has-translate3d": "*",
+    "binocarlos/pageturner": "*"
+  },
+  "development": {},
+  "styles": [
+    "book.css"
+  ],
+  "main":"index.js",
+  "scripts": [
+    "index.js",
+    "dictionary.js",
+    "buzz.js",
+    "gallery.js",
+    "media.js",
+    "platform.js",
+    "texthighlighter.js"
+  ],
+  "remotes": []
+}
