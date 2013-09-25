@@ -2,14 +2,15 @@
 
 var has3d = require('has-translate3d');
 
-module.exports = function storytimeisland_platform(){
+module.exports = function storytimeisland_platform(options){
   
-  var is_3d = has3d;
-  var is_phonegap = false;
+  options = options || {};
+
+  var is_3d = options.allow3d && has3d;
+  var is_phonegap = options.is_phonegap;
   var is_android = false;
 
-  if(window.$phonegap){
-    is_phonegap = true;
+  if(is_phonegap){
     /*
     
       androids
@@ -17,6 +18,8 @@ module.exports = function storytimeisland_platform(){
     */
     if((device.platform || '').toLowerCase().match(/android/)){
       is_android = true;
+
+      // android < 4 is not 3d
       if(device.version<4){
         is_3d = false;
       }

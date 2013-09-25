@@ -199,180 +199,6 @@ require.relative = function(parent) {
 
   return localRequire;
 };
-require.register("component-indexof/index.js", function(exports, require, module){
-module.exports = function(arr, obj){
-  if (arr.indexOf) return arr.indexOf(obj);
-  for (var i = 0; i < arr.length; ++i) {
-    if (arr[i] === obj) return i;
-  }
-  return -1;
-};
-});
-require.register("component-emitter/index.js", function(exports, require, module){
-
-/**
- * Module dependencies.
- */
-
-var index = require('indexof');
-
-/**
- * Expose `Emitter`.
- */
-
-module.exports = Emitter;
-
-/**
- * Initialize a new `Emitter`.
- *
- * @api public
- */
-
-function Emitter(obj) {
-  if (obj) return mixin(obj);
-};
-
-/**
- * Mixin the emitter properties.
- *
- * @param {Object} obj
- * @return {Object}
- * @api private
- */
-
-function mixin(obj) {
-  for (var key in Emitter.prototype) {
-    obj[key] = Emitter.prototype[key];
-  }
-  return obj;
-}
-
-/**
- * Listen on the given `event` with `fn`.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.on = function(event, fn){
-  this._callbacks = this._callbacks || {};
-  (this._callbacks[event] = this._callbacks[event] || [])
-    .push(fn);
-  return this;
-};
-
-/**
- * Adds an `event` listener that will be invoked a single
- * time then automatically removed.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.once = function(event, fn){
-  var self = this;
-  this._callbacks = this._callbacks || {};
-
-  function on() {
-    self.off(event, on);
-    fn.apply(this, arguments);
-  }
-
-  fn._off = on;
-  this.on(event, on);
-  return this;
-};
-
-/**
- * Remove the given callback for `event` or all
- * registered callbacks.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.off =
-Emitter.prototype.removeListener =
-Emitter.prototype.removeAllListeners = function(event, fn){
-  this._callbacks = this._callbacks || {};
-
-  // all
-  if (0 == arguments.length) {
-    this._callbacks = {};
-    return this;
-  }
-
-  // specific event
-  var callbacks = this._callbacks[event];
-  if (!callbacks) return this;
-
-  // remove all handlers
-  if (1 == arguments.length) {
-    delete this._callbacks[event];
-    return this;
-  }
-
-  // remove specific handler
-  var i = index(callbacks, fn._off || fn);
-  if (~i) callbacks.splice(i, 1);
-  return this;
-};
-
-/**
- * Emit `event` with the given args.
- *
- * @param {String} event
- * @param {Mixed} ...
- * @return {Emitter}
- */
-
-Emitter.prototype.emit = function(event){
-  this._callbacks = this._callbacks || {};
-  var args = [].slice.call(arguments, 1)
-    , callbacks = this._callbacks[event];
-
-  if (callbacks) {
-    callbacks = callbacks.slice(0);
-    for (var i = 0, len = callbacks.length; i < len; ++i) {
-      callbacks[i].apply(this, args);
-    }
-  }
-
-  return this;
-};
-
-/**
- * Return array of callbacks for `event`.
- *
- * @param {String} event
- * @return {Array}
- * @api public
- */
-
-Emitter.prototype.listeners = function(event){
-  this._callbacks = this._callbacks || {};
-  return this._callbacks[event] || [];
-};
-
-/**
- * Check if this emitter has `event` handlers.
- *
- * @param {String} event
- * @return {Boolean}
- * @api public
- */
-
-Emitter.prototype.hasListeners = function(event){
-  return !! this.listeners(event).length;
-};
-
-});
 require.register("component-jquery/index.js", function(exports, require, module){
 /*!
  * jQuery JavaScript Library v1.9.1
@@ -9977,26 +9803,178 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 })( window );
 
 });
-require.register("component-transform-property/index.js", function(exports, require, module){
-
-var styles = [
-  'webkitTransform',
-  'MozTransform',
-  'msTransform',
-  'OTransform',
-  'transform'
-];
-
-var el = document.createElement('p');
-var style;
-
-for (var i = 0; i < styles.length; i++) {
-  style = styles[i];
-  if (null != el.style[style]) {
-    module.exports = style;
-    break;
+require.register("component-indexof/index.js", function(exports, require, module){
+module.exports = function(arr, obj){
+  if (arr.indexOf) return arr.indexOf(obj);
+  for (var i = 0; i < arr.length; ++i) {
+    if (arr[i] === obj) return i;
   }
+  return -1;
+};
+});
+require.register("component-emitter/index.js", function(exports, require, module){
+
+/**
+ * Module dependencies.
+ */
+
+var index = require('indexof');
+
+/**
+ * Expose `Emitter`.
+ */
+
+module.exports = Emitter;
+
+/**
+ * Initialize a new `Emitter`.
+ *
+ * @api public
+ */
+
+function Emitter(obj) {
+  if (obj) return mixin(obj);
+};
+
+/**
+ * Mixin the emitter properties.
+ *
+ * @param {Object} obj
+ * @return {Object}
+ * @api private
+ */
+
+function mixin(obj) {
+  for (var key in Emitter.prototype) {
+    obj[key] = Emitter.prototype[key];
+  }
+  return obj;
 }
+
+/**
+ * Listen on the given `event` with `fn`.
+ *
+ * @param {String} event
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.on = function(event, fn){
+  this._callbacks = this._callbacks || {};
+  (this._callbacks[event] = this._callbacks[event] || [])
+    .push(fn);
+  return this;
+};
+
+/**
+ * Adds an `event` listener that will be invoked a single
+ * time then automatically removed.
+ *
+ * @param {String} event
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.once = function(event, fn){
+  var self = this;
+  this._callbacks = this._callbacks || {};
+
+  function on() {
+    self.off(event, on);
+    fn.apply(this, arguments);
+  }
+
+  fn._off = on;
+  this.on(event, on);
+  return this;
+};
+
+/**
+ * Remove the given callback for `event` or all
+ * registered callbacks.
+ *
+ * @param {String} event
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.off =
+Emitter.prototype.removeListener =
+Emitter.prototype.removeAllListeners = function(event, fn){
+  this._callbacks = this._callbacks || {};
+
+  // all
+  if (0 == arguments.length) {
+    this._callbacks = {};
+    return this;
+  }
+
+  // specific event
+  var callbacks = this._callbacks[event];
+  if (!callbacks) return this;
+
+  // remove all handlers
+  if (1 == arguments.length) {
+    delete this._callbacks[event];
+    return this;
+  }
+
+  // remove specific handler
+  var i = index(callbacks, fn._off || fn);
+  if (~i) callbacks.splice(i, 1);
+  return this;
+};
+
+/**
+ * Emit `event` with the given args.
+ *
+ * @param {String} event
+ * @param {Mixed} ...
+ * @return {Emitter}
+ */
+
+Emitter.prototype.emit = function(event){
+  this._callbacks = this._callbacks || {};
+  var args = [].slice.call(arguments, 1)
+    , callbacks = this._callbacks[event];
+
+  if (callbacks) {
+    callbacks = callbacks.slice(0);
+    for (var i = 0, len = callbacks.length; i < len; ++i) {
+      callbacks[i].apply(this, args);
+    }
+  }
+
+  return this;
+};
+
+/**
+ * Return array of callbacks for `event`.
+ *
+ * @param {String} event
+ * @return {Array}
+ * @api public
+ */
+
+Emitter.prototype.listeners = function(event){
+  this._callbacks = this._callbacks || {};
+  return this._callbacks[event] || [];
+};
+
+/**
+ * Check if this emitter has `event` handlers.
+ *
+ * @param {String} event
+ * @return {Boolean}
+ * @api public
+ */
+
+Emitter.prototype.hasListeners = function(event){
+  return !! this.listeners(event).length;
+};
 
 });
 require.register("component-has-translate3d/index.js", function(exports, require, module){
@@ -10020,6 +9998,28 @@ document.body.insertBefore(el, null);
 var val = getComputedStyle(el).getPropertyValue(map[prop]);
 document.body.removeChild(el);
 module.exports = null != val && val.length && 'none' != val;
+
+});
+require.register("component-transform-property/index.js", function(exports, require, module){
+
+var styles = [
+  'webkitTransform',
+  'MozTransform',
+  'msTransform',
+  'OTransform',
+  'transform'
+];
+
+var el = document.createElement('p');
+var style;
+
+for (var i = 0; i < styles.length; i++) {
+  style = styles[i];
+  if (null != el.style[style]) {
+    module.exports = style;
+    break;
+  }
+}
 
 });
 require.register("binocarlos-pageturner/index.js", function(exports, require, module){
@@ -10434,49 +10434,18 @@ function setPerspective(elem, amount){
 require.register("binocarlos-pageturner/templates/booktemplate.js", function(exports, require, module){
 module.exports = '<div class="pageturner-book">\n	<div id="base">\n\n	</div>\n	<div id="leaves">\n\n	</div>\n</div>';
 });
-require.register("storytimeisland-book/index.js", function(exports, require, module){
+require.register("binocarlos-storytimeisland-platform/index.js", function(exports, require, module){
 // this is the stub
 
-var $ = require('jquery');
 var has3d = require('has-translate3d');
-var Emitter = require('emitter');
-var Dictionary = require('./dictionary');
-var TextHighlighter = require('./texthighlighter');
-var Gallery = require('./gallery');
-var Hammer = require('hammer');
-var PageTurner = require('pageturner');
 
+module.exports = function storytimeisland_platform(options){
+  
+  options = options || {};
 
-/*
-
-  bookselector: the selector for what page element to render the book inside of
-
-  bookdata: the raw json object describing the book
-
-  apply_pageclass: a classname to add to each page
-
-  is_3d: whether to allow 3d mode
-
-  is_phonegap: whether we are running inside an app
-
-  perspective: the perspective to apply
-
-*/
-module.exports = function storytimeisland_book(options){
-
-  //bookselector, html, templates, data, global_settings){
-
-  var bookselector = options.selector || '#book';
-  var bookdata = options.data || {};
-  var bookconfig = bookdata.config;
-  var apply_pageclass = options.apply_pageclass || 'bookpage';
-  var is_3d = options.allow3d;
+  var is_3d = options.allow3d && has3d;
   var is_phonegap = options.is_phonegap;
-  var perspective = options.perspective || 950;
-
-  var startpage = bookconfig.test_page || 0;
-
-  var rendered = false;
+  var is_android = false;
 
   if(is_phonegap){
     /*
@@ -10485,12 +10454,83 @@ module.exports = function storytimeisland_book(options){
       
     */
     if((device.platform || '').toLowerCase().match(/android/)){
+      is_android = true;
+
+      // android < 4 is not 3d
       if(device.version<4){
         is_3d = false;
       }
     }
+
+    
   }
 
+  return {
+    is_phonegap:is_phonegap,
+    is_3d:is_3d,
+    is_android:is_android
+  }
+}
+
+
+});
+require.register("storytimeisland-book/index.js", function(exports, require, module){
+// this is the stub
+
+var $ = require('jquery');
+
+
+/*
+var has3d = require('has-translate3d');
+var Dictionary = require('./dictionary');
+var TextHighlighter = require('./texthighlighter');
+var Gallery = require('./gallery');
+var Media = require('./media');
+var Hammer = require('hammer');
+
+*/
+
+var PageTurner = require('pageturner');
+var Platform = require('storytimeisland-platform');
+
+/*
+
+ 
+
+*/
+module.exports = function storytimeisland_book(options){
+
+  //bookselector, html, templates, data, global_settings){
+
+
+  /*
+  
+    SETTINGS
+    
+  */
+  var bookselector = options.selector || '#book';
+  var bookdata = options.data || {};
+  var bookconfig = bookdata.config;
+  var apply_pageclass = options.apply_pageclass || 'bookpage';
+  
+  var perspective = options.perspective || 950;
+  var dictionary_mode = options.dictionary_active;
+  var highlighter_mode = options.highlighter_active;
+
+  var platform = Platform(options);
+  var is_3d = platform.is_3d;
+  var is_phonegap = platform.is_phonegap;
+
+
+  var startpage = bookconfig.test_page || 0;
+
+  var rendered = false;
+
+  /*
+  
+    STATE
+    
+  */
   var activedictionary = null;
   var activehighlighter = null;
 
@@ -10500,45 +10540,17 @@ module.exports = function storytimeisland_book(options){
   var currentsize = {};
   var currentpos = {};
 
-  var bookelem = $(bookselector);
-
-  var gallery = Gallery(bookdata.pages);
-
-var media = Media(window.$storytimebook, global_settings);
-
-  media.on('loaded:all', function(){
-
-    if(window.$storytimebook.config.test_page>=0){
-      show_book();
-    }
-    else{
-      show_home();  
-    }
-    
-  })
-
-  media.on('loaded:sound', function(src){
-    
-  })
-
-
-  home_factory.on('teddysound', function(){
-    media.playsound('audio/teddy/all');
-  })
-
-  home_factory.on('loadbook', function(){
-    media.stopsounds();
-    activemodule.destroy();
-    setTimeout(function(){
-      show_book();  
-    }, 10)
-    
-  })
-
-  
   /*
   
-    grab the source of the book
+    ELEM
+    
+  */
+  var bookelem = $(bookselector);
+
+
+  /*
+  
+    HTML SOURCE
     
   */
   var html = bookdata.pages.map(function(page, index){
@@ -10568,8 +10580,9 @@ var media = Media(window.$storytimebook, global_settings);
   // inject the HTML
   $(bookselector).html(html.join("\n"));
 
-  var pagecount = bookelem.find(pageselector).length;
+  var pagecount = bookelem.find('.page').length;
 
+  // then create the pageturner
   var book = new PageTurner({
     has3d:is_3d,
     bookselector:bookselector,
@@ -10578,7 +10591,99 @@ var media = Media(window.$storytimebook, global_settings);
     startpage:startpage,
     perspective:perspective
   })
+
+  /*
   
+    MEDIA
+    
+
+  var media = Media(bookdata, global_settings);
+
+  media.on('loaded:all', function(){
+
+    book.emit('media:loaded');
+    
+  })
+
+  media.on('loaded:sound', function(src){
+    
+  })
+
+  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*
+  
+    GALLERY
+    
+
+  var gallery = Gallery({
+    pages:bookdata.pages,
+    append_to:bookelem.parent()
+  });
+
+  gallery.on('loadpage', function(index){
+    close_gallery();
+    if(index==0){
+      apply_shadow(0);
+
+    }
+    else if(index==pagecount-1){
+      apply_shadow(pagecount-1);
+    }
+    $('#lastpagehtml').hide();
+    book.animate_index(index);
+  })
+
+  function open_gallery(){
+    gallery.$elem.css({
+      top:'0px'
+    })
+    setTimeout(function(){
+      gallery.active = true;
+      //$('#homebutton').show();
+      //$('#teddybutton .normal').hide();
+      //$('#teddybutton .highlight').show();
+    }, 10)
+  }
+
+  function close_gallery(){
+    gallery.$elem.css({
+      top:'-120px'
+    })
+    setTimeout(function(){
+      gallery.active = false;
+      //$('#homebutton').hide();
+      //$('#teddybutton .normal').show();
+      //$('#teddybutton .highlight').hide();
+    }, 10)
+    
+    
+  }
+
+
+  */
+
+
+/*
+
+  function get_page_data(forpage){
+    return bookdata.pages[arguments.length>0 ? forpage : book.currentpage];
+  }
+
+
+
   function get_current_page(){
     return book.currentpage || startpage;
   }
@@ -10614,35 +10719,9 @@ var media = Media(window.$storytimebook, global_settings);
     }
   }
 
-  function open_gallery(){
-    gallery.$elem.css({
-      top:'0px'
-    })
-    setTimeout(function(){
-      gallery.active = true;
-      //$('#homebutton').show();
-      //$('#teddybutton .normal').hide();
-      //$('#teddybutton .highlight').show();
-    }, 10)
-    
-    
-  }
 
-  function close_gallery(){
-    gallery.$elem.css({
-      top:'-120px'
-    })
-    setTimeout(function(){
-      gallery.active = false;
-      //$('#homebutton').hide();
-      //$('#teddybutton .normal').show();
-      //$('#teddybutton .highlight').hide();
-    }, 10)
-    
-    
-  }
 
-/*
+
   function clickteddy(){
     if(gallery.active){
       close_gallery();
@@ -10659,7 +10738,7 @@ var media = Media(window.$storytimebook, global_settings);
     },500)
     
   }
-*/
+
 
   book.on('ready', function(){
     //$(bookselector).addClass('dropshadow');
@@ -10723,6 +10802,8 @@ var media = Media(window.$storytimebook, global_settings);
     loading = true;
   })
 
+
+
   var currentindex = -1;
 
   var shadowloaded = false;
@@ -10763,7 +10844,7 @@ var media = Media(window.$storytimebook, global_settings);
 
     // only do the text highlighting when the voice is reading
     if(global_settings.voice_audio){
-      activehighlighter = TextHighlighter(html[index], data.config.highlighters ? data.config.highlighters[index] : []);
+      activehighlighter = TextHighlighter(html[index], bookdata.config.highlighters ? bookdata.config.highlighters[index] : []);
 
       if(index!=currentindex){
         activehighlighter.start();  
@@ -10777,7 +10858,7 @@ var media = Media(window.$storytimebook, global_settings);
     
 
     activedictionary.on('sound', function(mp3){
-      book_factory.emit('dictionary', mp3);
+      book.emit('dictionary', mp3);
     })
 
     if(book.triggernext){
@@ -10785,7 +10866,7 @@ var media = Media(window.$storytimebook, global_settings);
       book.triggernext = null;
     }
     else if(index!=currentindex){
-      book_factory.emit('view:page', index);
+      book.emit('view:page', index);
     }
 
     gallery.set_current_page(index);
@@ -10814,7 +10895,7 @@ var media = Media(window.$storytimebook, global_settings);
     }
 
     animating = true;
-    book_factory.emit('animate');
+    book.emit('animate');
   })
 
   book.on('animated', function(side){
@@ -10830,18 +10911,7 @@ var media = Media(window.$storytimebook, global_settings);
     //apply_shadow(side);
   })
 
-  gallery.on('loadpage', function(index){
-    close_gallery();
-    if(index==0){
-      apply_shadow(0);
 
-    }
-    else if(index==pagecount-1){
-      apply_shadow(pagecount-1);
-    }
-    $('#lastpagehtml').hide();
-    book.animate_index(index);
-  })
 
   book.ondragstart = function(ev){
     dragging = true;
@@ -10915,11 +10985,6 @@ var media = Media(window.$storytimebook, global_settings);
         return;
       }
 
-      /*
-    
-        where they clicked
-        
-      */
       var evpos = {
         x:ev.touches[0].x,
         y:ev.touches[0].y
@@ -10931,11 +10996,7 @@ var media = Media(window.$storytimebook, global_settings);
     }
   }
 
-  function get_page_data(forpage){
-    return data.pages[arguments.length>0 ? forpage : book.currentpage];
-  }
-
-  book.render();
+  //book.render();
 
   $('#shadow').hide();
 
@@ -10944,1640 +11005,23 @@ var media = Media(window.$storytimebook, global_settings);
     shadowloaded = true;
   }, 1000)
 
-  book.destroy = function(){
-    $(bookselector).html('');
-    gallery.destroy();
-  }
-
   return book;
-}
 
-
-});
-require.register("storytimeisland-book/dictionary.js", function(exports, require, module){
-// this is the stub
-
-/*
-
-  one of these is created every time a page is loaded
-
-  it represents the active dictionary on the given page
-
-  it emits 'sound' events for the application to handle
-
-  you pass it the data for the page that is active
-  
-*/
-var $ = require('jquery');
-var Emitter = require('emitter');
-
-module.exports = function storytimeisland_dictionary(page, currentpos, currentsize){
-
-  function set_scale(elem, targetscale){
-    elem.css({
-
-        'transform':'scale(' + targetscale + ', ' + targetscale + ')',
-        '-webkit-transform':'scale(' + targetscale + ', ' + targetscale + ')',
-        '-moz-transform':'scale(' + targetscale + ', ' + targetscale + ')',
-        '-ms-transform':'scale(' + targetscale + ', ' + targetscale + ')'
-
-      })
-  }
-
-  function removepopup(popup){
-    set_scale(popup, 0.01);
-    setTimeout(function(){
-      popup.remove();
-    }, 1000)
-  }
-
-  function find_dictionary(hit){
-    var ret = null;
-
-    for(var i in page.dictionary){
-      var block = page.dictionary[i];
-
-      var left = parseFloat(block.x);
-      var right = left + (parseFloat(block.width));
-      var top = parseFloat(block.y);
-      var bottom = top + (parseFloat(block.height));
-
-      if(hit.x>=left && hit.x<=right && hit.y>=top && hit.y<=bottom){
-        ret = block;
-        break;
-      }
-    }
-    return ret;
-  }
-
-  /*
-  
-    this function is run with a coords object (x,y) for the tap on the screen
-    
   */
-  function dictionary_handle(evpos){
-
-    /*
-      
-      where they clicked in relation to the book on the screen
-      
-    */
-    var bookevpos = {
-      x:evpos.x - currentpos.x,
-      y:evpos.y - currentpos.y
-    }
-
-    /*
-    
-      the book coords scaled to match the original boundary from flash
-      
-    */
-    var adjusted_evpos = {
-      x:bookevpos.x * (1/currentsize.ratio),
-      y:bookevpos.y * (1/currentsize.ratio)
-    }
-
-    var offset = currentsize.dictionary_offset;
-
-    if(offset){
-      adjusted_evpos.x += offset;
-    }
-
-    var block = find_dictionary(adjusted_evpos);
-
-    if(!block){
-      return;
-    }
-
-    /*
-    
-      here we check the extra config to see if there are instructions for this dictionary sound
-      
-    */
-    var sound_name = block.name.replace(/_\d+$/, '');
-    var page_config = page;
-    var extra_config = page_config.extra_config;
-
-    var mp3 = sound_name;
-    var text = sound_name;//
-
-    if(extra_config && extra_config.sounds){
-      var sound = extra_config.sounds[sound_name];
-      if(sound){
-        text = sound.text;
-        mp3 = sound.sound;
-      }
-    }
-
-    text = text.replace(/^\W*/, '');
-    text = text.replace(/\W*$/, '');
-
-    var textparts = text.split(' ').map(function(s){
-      return s.replace(/^(\w)/, function(st){
-        return st.toUpperCase();
-      })  
-    })
-
-    var final_text = textparts.join(' ');
-
-    var popup = $('<div class="dictionarytab animatorquick">' + final_text + '</div>');
-
-    popup.css({
-      left:evpos.x-50 + 'px',
-      top:evpos.y-50 + 'px'
-    })
-
-    $('body').append(popup);
-
-    setTimeout(function(){
-      //$bookmedia.playdictionarysound(dictionaryid);
-      set_scale(popup, 1);  
-    }, 1)
-
-    setTimeout(function(){
-      removepopup(popup);
-    }, 3000);
-
-    dictionary_handle.emit('sound', mp3);
-  }
-
-  dictionary_handle.reset = function(){
-    $('.dictionarytab').remove();
-  }
-
-  for(var i in Emitter.prototype){
-    dictionary_handle[i] = Emitter.prototype[i];
-  }
-
-  return dictionary_handle;
 }
 
 
 });
-require.register("storytimeisland-book/buzz.js", function(exports, require, module){
-// ----------------------------------------------------------------------------
-// Buzz, a Javascript HTML5 Audio library
-// v 1.0.x beta
-// Licensed under the MIT license.
-// http://buzz.jaysalvat.com/
-// ----------------------------------------------------------------------------
-// Copyright (C) 2011 Jay Salvat
-// http://jaysalvat.com/
-// ----------------------------------------------------------------------------
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-// ----------------------------------------------------------------------------
-
-(function (name, context, factory) {
-    if (typeof module !== 'undefined' && module.exports) {
-        module.exports = factory();
-    } else if (typeof context.define === 'function' && context.define.amd) {
-        define(name, [], factory);
-    } else {
-        context[name] = factory();
-    }
-})('buzz', this, function () {
-
-    var buzz = {
-        defaults: {
-            autoplay: false,
-            duration: 5000,
-            formats: [],
-            loop: false,
-            placeholder: '--',
-            preload: 'metadata',
-            volume: 80,
-            document: document // iframe support
-        },
-        types: {
-            'mp3': 'audio/mpeg',
-            'ogg': 'audio/ogg',
-            'wav': 'audio/wav',
-            'aac': 'audio/aac',
-            'm4a': 'audio/x-m4a'
-        },
-        sounds: [],
-        el: document.createElement('audio'),
-
-        sound: function (src, options) {
-            options = options || {};
-
-            var doc = options.document || buzz.defaults.document;
-
-            var pid = 0,
-                events = [],
-                eventsOnce = {},
-                supported = buzz.isSupported();
-
-            // publics
-            this.load = function () {
-                if (!supported) {
-                    return this;
-                }
-
-                this.sound.load();
-
-                return this;
-            };
-
-            this.play = function () {
-                if (!supported) {
-                    return this;
-                }
-
-                this.sound.play();
-
-                return this;
-            };
-
-            this.togglePlay = function () {
-                if (!supported) {
-                    return this;
-                }
-
-                if (this.sound.paused) {
-                    this.sound.play();
-                } else {
-                    this.sound.pause();
-                }
-
-                return this;
-            };
-
-            this.pause = function () {
-                if (!supported) {
-                    return this;
-                }
-
-                this.sound.pause();
-
-                return this;
-            };
-
-            this.isPaused = function () {
-                if (!supported) {
-                    return null;
-                }
-
-                return this.sound.paused;
-            };
-
-            this.stop = function () {
-                if (!supported ) {
-                    return this;
-                }
-
-                this.setTime(0);
-                this.sound.pause();
-
-                return this;
-            };
-
-            this.isEnded = function () {
-                if (!supported) {
-                    return null;
-                }
-
-                return this.sound.ended;
-            };
-
-            this.loop = function () {
-                if (!supported) {
-                    return this;
-                }
-
-                this.sound.loop = 'loop';
-                this.bind('ended.buzzloop', function () {
-                    this.currentTime = 0;
-                    this.play();
-                });
-
-                return this;
-            };
-
-            this.unloop = function () {
-                if (!supported) {
-                    return this;
-                }
-
-                this.sound.removeAttribute('loop');
-                this.unbind('ended.buzzloop');
-
-                return this;
-            };
-
-            this.mute = function () {
-                if (!supported) {
-                    return this;
-                }
-
-                this.sound.muted = true;
-
-                return this;
-            };
-
-            this.unmute = function () {
-                if (!supported) {
-                    return this;
-                }
-
-                this.sound.muted = false;
-
-                return this;
-            };
-
-            this.toggleMute = function () {
-                if (!supported) {
-                    return this;
-                }
-
-                this.sound.muted = !this.sound.muted;
-
-                return this;
-            };
-
-            this.isMuted = function () {
-                if (!supported) {
-                    return null;
-                }
-
-                return this.sound.muted;
-            };
-
-            this.setVolume = function (volume) {
-                if (!supported) {
-                    return this;
-                }
-
-                if (volume < 0) {
-                    volume = 0;
-                }
-                if (volume > 100) {
-                    volume = 100;
-                }
-              
-                this.volume = volume;
-                this.sound.volume = volume / 100;
-
-                return this;
-            };
-          
-            this.getVolume = function () {
-                if (!supported) {
-                    return this;
-                }
-
-                return this.volume;
-            };
-
-            this.increaseVolume = function (value) {
-                return this.setVolume(this.volume + (value || 1));
-            };
-
-            this.decreaseVolume = function (value) {
-                return this.setVolume(this.volume - (value || 1));
-            };
-
-            this.setTime = function (time) {
-                if (!supported) {
-                    return this;
-                }
-
-                this.whenReady(function () {
-                    this.sound.currentTime = time;
-                });
-
-                return this;
-            };
-
-            this.getTime = function () {
-                if (!supported) {
-                    return null;
-                }
-
-                var time = Math.round(this.sound.currentTime * 100) / 100;
-
-                return isNaN(time) ? buzz.defaults.placeholder : time;
-            };
-
-            this.setPercent = function (percent) {
-                if (!supported) {
-                    return this;
-                }
-
-                return this.setTime(buzz.fromPercent(percent, this.sound.duration));
-            };
-
-            this.getPercent = function () {
-                if (!supported) {
-                    return null;
-                }
-
-                var percent = Math.round(buzz.toPercent(this.sound.currentTime, this.sound.duration));
-
-                return isNaN(percent) ? buzz.defaults.placeholder : percent;
-            };
-
-            this.setSpeed = function (duration) {
-                if (!supported) {
-                    return this;
-                }
-
-                this.sound.playbackRate = duration;
-                
-                return this;
-            };
-
-            this.getSpeed = function () {
-                if (!supported) {
-                    return null;
-                }
-
-                return this.sound.playbackRate;
-            };
-
-            this.getDuration = function () {
-                if (!supported) {
-                    return null;
-                }
-
-                var duration = Math.round(this.sound.duration * 100) / 100;
-
-                return isNaN(duration) ? buzz.defaults.placeholder : duration;
-            };
-
-            this.getPlayed = function () {
-                if (!supported) {
-                    return null;
-                }
-
-                return timerangeToArray(this.sound.played);
-            };
-
-            this.getBuffered = function () {
-                if (!supported) {
-                    return null;
-                }
-
-                return timerangeToArray(this.sound.buffered);
-            };
-
-            this.getSeekable = function () {
-                if (!supported) {
-                    return null;
-                }
-
-                return timerangeToArray(this.sound.seekable);
-            };
-
-            this.getErrorCode = function () {
-                if (supported && this.sound.error) {
-                    return this.sound.error.code;
-                }
-
-                return 0;
-            };
-
-            this.getErrorMessage = function () {
-                if (!supported) {
-                    return null;
-                }
-
-                switch(this.getErrorCode()) {
-                    case 1:
-                        return 'MEDIA_ERR_ABORTED';
-                    case 2:
-                        return 'MEDIA_ERR_NETWORK';
-                    case 3:
-                        return 'MEDIA_ERR_DECODE';
-                    case 4:
-                        return 'MEDIA_ERR_SRC_NOT_SUPPORTED';
-                    default:
-                        return null;
-                }
-            };
-
-            this.getStateCode = function () {
-                if (!supported) {
-                    return null;
-                }
-
-                return this.sound.readyState;
-            };
-
-            this.getStateMessage = function () {
-                if (!supported) {
-                    return null;
-                }
-
-                switch(this.getStateCode()) {
-                    case 0:
-                        return 'HAVE_NOTHING';
-                    case 1:
-                        return 'HAVE_METADATA';
-                    case 2:
-                        return 'HAVE_CURRENT_DATA';
-                    case 3:
-                        return 'HAVE_FUTURE_DATA';
-                    case 4:
-                        return 'HAVE_ENOUGH_DATA';
-                    default:
-                        return null;
-                }
-            };
-
-            this.getNetworkStateCode = function () {
-                if (!supported) {
-                    return null;
-                }
-
-                return this.sound.networkState;
-            };
-
-            this.getNetworkStateMessage = function () {
-                if (!supported) {
-                    return null;
-                }
-
-                switch(this.getNetworkStateCode()) {
-                    case 0:
-                        return 'NETWORK_EMPTY';
-                    case 1:
-                        return 'NETWORK_IDLE';
-                    case 2:
-                        return 'NETWORK_LOADING';
-                    case 3:
-                        return 'NETWORK_NO_SOURCE';
-                    default:
-                        return null;
-                }
-            };
-
-            this.set = function (key, value) {
-                if (!supported) {
-                    return this;
-                }
-
-                this.sound[key] = value;
-
-                return this;
-            };
-
-            this.get = function (key) {
-                if (!supported) {
-                  return null;
-                }
-
-                return key ? this.sound[key] : this.sound;
-            };
-
-            this.bind = function (types, func) {
-                if (!supported) {
-                    return this;
-                }
-
-                types = types.split(' ');
-
-                var self = this,
-                    efunc = function (e) { func.call(self, e); };
-
-                for (var t = 0; t < types.length; t++) {
-                    var type = types[t],
-                        idx = type;
-                        type = idx.split('.')[0];
-
-                        events.push({ idx: idx, func: efunc });
-                        this.sound.addEventListener(type, efunc, true);
-                }
-
-                return this;
-            };
-
-            this.unbind = function (types) {
-                if (!supported) {
-                    return this;
-                }
-
-                types = types.split(' ');
-
-                for (var t = 0; t < types.length; t++) {
-                    var idx = types[t],
-                        type = idx.split('.')[0];
-
-                    for (var i = 0; i < events.length; i++) {
-                        var namespace = events[i].idx.split('.');
-                        if (events[i].idx == idx || (namespace[1] && namespace[1] == idx.replace('.', ''))) {
-                            this.sound.removeEventListener(type, events[i].func, true);
-                            // remove event
-                            events.splice(i, 1);
-                        }
-                    }
-                }
-
-                return this;
-            };
-
-            this.bindOnce = function (type, func) {
-                if (!supported) {
-                    return this;
-                }
-
-                var self = this;
-
-                eventsOnce[pid++] = false;
-                this.bind(type + '.' + pid, function () {
-                   if (!eventsOnce[pid]) {
-                       eventsOnce[pid] = true;
-                       func.call(self);
-                   }
-                   self.unbind(type + '.' + pid);
-                });
-
-                return this;
-            };
-
-            this.trigger = function (types) {
-                if (!supported) {
-                    return this;
-                }
-
-                types = types.split(' ');
-
-                for (var t = 0; t < types.length; t++) {
-                    var idx = types[t];
-
-                    for (var i = 0; i < events.length; i++) {
-                        var eventType = events[i].idx.split('.');
-
-                        if (events[i].idx == idx || (eventType[0] && eventType[0] == idx.replace('.', ''))) {
-                            var evt = doc.createEvent('HTMLEvents');
-
-                            evt.initEvent(eventType[0], false, true);
-
-                            this.sound.dispatchEvent(evt);
-                        }
-                    }
-                }
-
-                return this;
-            };
-
-            this.fadeTo = function (to, duration, callback) {
-                if (!supported) {
-                    return this;
-                }
-
-                if (duration instanceof Function) {
-                    callback = duration;
-                    duration = buzz.defaults.duration;
-                } else {
-                    duration = duration || buzz.defaults.duration;
-                }
-
-                var from = this.volume,
-                    delay = duration / Math.abs(from - to),
-                    self = this;
-
-                this.play();
-
-                function doFade() {
-                    setTimeout(function () {
-                        if (from < to && self.volume < to) {
-                            self.setVolume(self.volume += 1);
-                            doFade();
-                        } else if (from > to && self.volume > to) {
-                            self.setVolume(self.volume -= 1);
-                            doFade();
-                        } else if (callback instanceof Function) {
-                            callback.apply(self);
-                        }
-                    }, delay);
-                }
-
-                this.whenReady(function () {
-                    doFade();
-                });
-
-                return this;
-            };
-
-            this.fadeIn = function (duration, callback) {
-                if (!supported) {
-                    return this;
-                }
-
-                return this.setVolume(0).fadeTo(100, duration, callback);
-            };
-
-            this.fadeOut = function (duration, callback) {
-                if (!supported) {
-                    return this;
-                }
-
-                return this.fadeTo(0, duration, callback);
-            };
-
-            this.fadeWith = function (sound, duration) {
-                if (!supported) {
-                    return this;
-                }
-
-                this.fadeOut(duration, function () {
-                    this.stop();
-                });
-
-                sound.play().fadeIn(duration);
-
-                return this;
-            };
-
-            this.whenReady = function (func) {
-                if (!supported) {
-                    return null;
-                }
-
-                var self = this;
-
-                if (this.sound.readyState === 0) {
-                    this.bind('canplay.buzzwhenready', function () {
-                        func.call(self);
-                    });
-                } else {
-                    func.call(self);
-                }
-            };
-
-            // privates
-            function timerangeToArray(timeRange) {
-                var array = [],
-                    length = timeRange.length - 1;
-
-                for (var i = 0; i <= length; i++) {
-                    array.push({
-                        start: timeRange.start(i),
-                        end: timeRange.end(i)
-                    });
-                }
-
-                return array;
-            }
-
-            function getExt(filename) {
-                return filename.split('.').pop();
-            }
-            
-            function addSource(sound, src) {
-                var source = doc.createElement('source');
-
-                source.src = src;
-                
-                if (buzz.types[getExt(src)]) {
-                    source.type = buzz.types[getExt(src)];
-                }
-
-                sound.appendChild(source);
-            }
-
-            // init
-            if (supported && src) {
-              
-                for (var i in buzz.defaults) {
-                    if (buzz.defaults.hasOwnProperty(i)) {
-                        options[i] = options[i] || buzz.defaults[i];
-                    }
-                }
-
-                this.sound = doc.createElement('audio');
-
-                if (src instanceof Array) {
-                    for (var j in src) {
-                        if (src.hasOwnProperty(j)) {
-                            addSource(this.sound, src[j]);
-                        }
-                    }
-                } else if (options.formats.length) {
-                    for (var k in options.formats) {
-                        if (options.formats.hasOwnProperty(k)) {
-                            addSource(this.sound, src + '.' + options.formats[k]);
-                        }
-                    }
-                } else {
-                    addSource(this.sound, src);
-                }
-
-                if (options.loop) {
-                    this.loop();
-                }
-
-                if (options.autoplay) {
-                    this.sound.autoplay = 'autoplay';
-                }
-
-                if (options.preload === true) {
-                    this.sound.preload = 'auto';
-                } else if (options.preload === false) {
-                    this.sound.preload = 'none';
-                } else {
-                    this.sound.preload = options.preload;
-                }
-
-                this.setVolume(options.volume);
-
-                buzz.sounds.push(this);
-            }
-        },
-
-        group: function (sounds) {
-            sounds = argsToArray(sounds, arguments);
-
-            // publics
-            this.getSounds = function () {
-                return sounds;
-            };
-
-            this.add = function (soundArray) {
-                soundArray = argsToArray(soundArray, arguments);
-
-                for (var a = 0; a < soundArray.length; a++) {
-                    sounds.push(soundArray[a]);
-                }
-            };
-
-            this.remove = function (soundArray) {
-                soundArray = argsToArray(soundArray, arguments);
-
-                for (var a = 0; a < soundArray.length; a++) {
-                    for (var i = 0; i < sounds.length; i++) {
-                        if (sounds[i] == soundArray[a]) {
-                            sounds.splice(i, 1);
-                            break;
-                        }
-                    }
-                }
-            };
-
-            this.load = function () {
-                fn('load');
-                
-                return this;
-            };
-
-            this.play = function () {
-                fn('play');
-                
-                return this;
-            };
-
-            this.togglePlay = function () {
-                fn('togglePlay');
-                
-                return this;
-            };
-
-            this.pause = function (time) {
-                fn('pause', time);
-                
-                return this;
-            };
-
-            this.stop = function () {
-                fn('stop');
-                
-                return this;
-            };
-
-            this.mute = function () {
-                fn('mute');
-                
-                return this;
-            };
-
-            this.unmute = function () {
-                fn('unmute');
-                
-                return this;
-            };
-
-            this.toggleMute = function () {
-                fn('toggleMute');
-                
-                return this;
-            };
-
-            this.setVolume = function (volume) {
-                fn('setVolume', volume);
-                
-                return this;
-            };
-
-            this.increaseVolume = function (value) {
-                fn('increaseVolume', value);
-                
-                return this;
-            };
-
-            this.decreaseVolume = function (value) {
-                fn('decreaseVolume', value);
-                
-                return this;
-            };
-
-            this.loop = function () {
-                fn('loop');
-                
-                return this;
-            };
-
-            this.unloop = function () {
-                fn('unloop');
-                
-                return this;
-            };
-
-            this.setTime = function (time) {
-                fn('setTime', time);
-                
-                return this;
-            };
-
-            this.set = function (key, value) {
-                fn('set', key, value);
-                
-                return this;
-            };
-
-            this.bind = function (type, func) {
-                fn('bind', type, func);
-                
-                return this;
-            };
-
-            this.unbind = function (type) {
-                fn('unbind', type);
-                
-                return this;
-            };
-
-            this.bindOnce = function (type, func) {
-                fn('bindOnce', type, func);
-                
-                return this;
-            };
-
-            this.trigger = function (type) {
-                fn('trigger', type);
-                
-                return this;
-            };
-
-            this.fade = function (from, to, duration, callback) {
-                fn('fade', from, to, duration, callback);
-                
-                return this;
-            };
-
-            this.fadeIn = function (duration, callback) {
-                fn('fadeIn', duration, callback);
-                
-                return this;
-            };
-
-            this.fadeOut = function (duration, callback) {
-                fn('fadeOut', duration, callback);
-                
-                return this;
-            };
-
-            // privates
-            function fn() {
-                var args = argsToArray(null, arguments),
-                    func = args.shift();
-
-                for (var i = 0; i < sounds.length; i++) {
-                    sounds[i][func].apply(sounds[i], args);
-                }
-            }
-
-            function argsToArray(array, args) {
-                return (array instanceof Array) ? array : Array.prototype.slice.call(args);
-            }
-        },
-
-        all: function () {
-            return new buzz.group(buzz.sounds);
-        },
-
-        isSupported: function () {
-            return !!buzz.el.canPlayType;
-        },
-
-        isOGGSupported: function () {
-            return !!buzz.el.canPlayType && buzz.el.canPlayType('audio/ogg; codecs="vorbis"');
-        },
-
-        isWAVSupported: function () {
-            return !!buzz.el.canPlayType && buzz.el.canPlayType('audio/wav; codecs="1"');
-        },
-
-        isMP3Supported: function () {
-            return !!buzz.el.canPlayType && buzz.el.canPlayType('audio/mpeg;');
-        },
-
-        isAACSupported: function () {
-            return !!buzz.el.canPlayType && (buzz.el.canPlayType('audio/x-m4a;') || buzz.el.canPlayType('audio/aac;'));
-        },
-
-        toTimer: function (time, withHours) {
-            var h, m, s;
-
-            h = Math.floor(time / 3600);
-            h = isNaN(h) ? '--' : (h >= 10) ? h : '0' + h;
-            m = withHours ? Math.floor(time / 60 % 60) : Math.floor(time / 60);
-            m = isNaN(m) ? '--' : (m >= 10) ? m : '0' + m;
-            s = Math.floor(time % 60);
-            s = isNaN(s) ? '--' : (s >= 10) ? s : '0' + s;
-
-            return withHours ? h + ':' + m + ':' + s : m + ':' + s;
-        },
-
-        fromTimer: function (time) {
-            var splits = time.toString().split(':');
-
-            if (splits && splits.length == 3) {
-                time = (parseInt(splits[0], 10) * 3600) + (parseInt(splits[1], 10) * 60) + parseInt(splits[2], 10);
-            }
-
-            if (splits && splits.length == 2) {
-                time = (parseInt(splits[0], 10) * 60) + parseInt(splits[1], 10);
-            }
-
-            return time;
-        },
-
-        toPercent: function (value, total, decimal) {
-            var r = Math.pow(10, decimal || 0);
-
-            return Math.round(((value * 100) / total) * r) / r;
-        },
-
-        fromPercent: function (percent, total, decimal) {
-            var r = Math.pow(10, decimal || 0);
-
-            return  Math.round(((total / 100) * percent) * r) / r;
-        }
-    };
-
-    return buzz;
-});
-});
-require.register("storytimeisland-book/gallery.js", function(exports, require, module){
-// this is the stub
-
-/*
-
-  one of these is created every time a page is loaded
-
-  it represents the active dictionary on the given page
-
-  it emits 'sound' events for the application to handle
-
-  you pass it the data for the page that is active
-  
-*/
-
-var $ = require('jquery');
-var Emitter = require('emitter');
-var template = require('./templates/gallery');
-var pagetemplate = require('./templates/gallerypage');
-
-module.exports = function storytimeisland_gallery(options){
-  
-  var append_to = options.append_to || $('body');
-  var thumb_width = options.thumb_width || 112;
-  var thumb_src = options.thumb_src || 'images/page<number>.thumb.png';
-
-  var pages = options.pages;
-
-  var total_width = pages * (thumb_width+10);
-
-  var gallery = {
-    active:false
-  };
-
-  for(var i in Emitter.prototype){
-    gallery[i] = Emitter.prototype[i];
-  }
-
-  var $elem = gallery.$elem = $('' + template);
-  var $imageselem = $elem.find('.galleryimages');
-
-  $imageselem.css({
-    width:total_width + 'px'
-  })
-
-  for(var pageindex=0; pageindex<pages.length; pageindex++){
-    var gallerypage = $('' + pagetemplate);
-    var holder = gallerypage.find('.gallerypage');
-    holder.attr('data-gallery-index', pageindex);
-    holder.css({
-      'background':'url(' + thumb_src.replace(/<number>/, pageindex) + ')'
-    })
-    holder.find('.badge').html(pageindex);
-    $imageselem.append(holder);
-  }
-
-  append_to.append($elem);
-
-  var imageholder = $imageselem;
-
-  var total_width = imageholder.width();
-  var visible_width = $elem.width();
-  var max_offset = total_width-visible_width + 200;
-  var current_offset = 0;
-
-  gallery.destroy = function(){
-    $elem.remove();
-  }
-
-  gallery.animate = function(direction){
-    var new_offset = current_offset + (direction*(visible_width/4)*-1);
-    if(new_offset>0){
-      new_offset = 0;
-    }
-    else if(new_offset<-max_offset){
-      new_offset = -max_offset;
-    }
-
-    imageholder.css({
-      left:new_offset + 'px'
-    })
-    current_offset = new_offset;
-  }
-
-  gallery.set_current_page = function(index){
-    $elem.find('span.badge').removeClass('badge-warning');
-    $elem.find('span.badge').eq(index).addClass('badge-warning');
-  }
-
-  gallery.tap = function(ev){
-    var target = ev.originalEvent.target;
-    if(!target){
-      return;
-    }
-    target = $(target);
-    if(target.hasClass('arrowimg')){
-      var direction = parseInt(target.attr('data-direction'));
-      gallery.animate(direction); 
-      return;
-    }
-    var galleryimage = target.closest('.gallerypage');
-    if(galleryimage.length<=0){
-      return;
-    }
-
-    var index = parseInt(galleryimage.attr('data-gallery-index'));
-    gallery.emit('loadpage', index);
-    
-  }
-
-  return gallery;
-}
-
-
-});
-require.register("storytimeisland-book/media.js", function(exports, require, module){
-/*
-
-  the media for a book
-  
-*/
-
-var Emitter = require('emitter');
-var Platform = require('./platform');
-var buzz = require('./buzz');
-
-module.exports = function storytimeisland_media(book, global_settings){
-
-  var platform = Platform();
-
-  var media = {
-    is_android:platform.is_android,
-    sounds:{},
-    playing:{},
-    playspeech:true
-  }
-
-  function exitFromApp(){
-    media.stopsounds();
-  }
-
-  if(platform.is_phonegap){
-
-    document.addEventListener("backbutton", exitFromApp, false);
-    document.addEventListener("pause", exitFromApp, false);
-    document.addEventListener("menubutton", exitFromApp, false);
-
-  }
-
-  /*
-  
-    extracts a list of URLS for the sound files we will need for a book
-    
-  */
-  function extract_book_files(){
-    
-    var all_images = [];
-    var all_sounds = [];
-
-    var dictionary_sounds = {};
-
-    all_sounds.push("audio/pagespeech/page0");
-    all_sounds.push("audio/pagefx/page0");
-
-    var found = {};
-    book.pages.forEach(function(page, i){
-
-      if(page.dictionary){
-        var extra_config = page.extra_config;
-
-        page.dictionary.forEach(function(entry){
-          var sound_name = entry.name.replace(/_.*$/, '');
-          if(extra_config && extra_config.sounds){
-            var sound = extra_config.sounds[sound_name];
-            if(sound){
-              sound_name = sound.sound;
-            }
-          }
-          dictionary_sounds["audio/sfx/" + sound_name] = true;
-          found[sound_name] = true;          
-        })
-      }
-
-      if(i<book.pages.length-2){
-        all_sounds.push("audio/pagespeech/page" + page.number);
-        all_sounds.push("audio/pagefx/page" + page.number);
-      }
-      
-      all_images.push('images/page' + page.number + '.png');
-    })
-
-    for(var i in found){
-      console.log(i);
-    }
-
-    var keys = [];
-    for(var p in dictionary_sounds){
-      keys.push(p);
-    }
-
-    all_sounds = all_sounds.concat(keys);
-
-    return {
-      images:all_images,
-      sounds:all_sounds
-    }
-
-  }
-
-  /*
-  
-    --------------------------------------------
-    --------------------------------------------
-
-
-    LOAD
-
-
-    --------------------------------------------
-    --------------------------------------------
-    
-  */
-
-  var _loaded = false;
-
-  media.load = function(extrafiles){
-
-    if(_loaded){
-      return;
-    }
-
-    _loaded = true;
-
-    var self = this;
-    
-    var bookfiles = extract_book_files(book);
-
-    var allfiles = {
-      images:(extrafiles.images || []).concat(bookfiles.images),
-      sounds:(extrafiles.sounds || []).concat(bookfiles.sounds)
-    }
-
-    var loadsounds = [].concat(allfiles.sounds);
-
-    media.images = allfiles.images;
-
-    var soundcounter = 0;
-
-    function success(){
-      // media has loaded
-    }
-
-    function media_error(e){
-      console.log('media error');
-      console.dir(e);
-    }
-
-    function load_sound(soundsrc, nextsound){
-      var theSound = null;
-
-      if(media.is_android){
-        var src = '/android_asset/www/' + soundsrc + '.mp3';
-        theSound = new Media(src, success, media_error);
-      }
-      else{
-        theSound = new buzz.sound(soundsrc + '.mp3', {
-          preload:soundcounter<20 ? true : false
-        })
-        soundcounter++;
-      }
-
-      media.sounds[soundsrc] = theSound;
-
-      setTimeout(function(){
-        self.emit('loaded:sound', soundsrc);
-        nextsound();
-      }, 10)
-    }
-
-    function load_next_sound(){
-      if(loadsounds.length<=0){
-        self.emit('loaded:all');
-        return;
-      }
-      var nextsound = loadsounds.shift();
-
-      load_sound(nextsound, load_next_sound);
-    }
-
-    load_next_sound();
-  }
-
-
-  /*
-  
-    --------------------------------------------
-    --------------------------------------------
-
-
-    PLAY SOUND
-
-
-    --------------------------------------------
-    --------------------------------------------
-    
-  */
-
-  media.playdictionarysound = function(name){
-    var snd = this.sounds["audio/sfx/" + name];
-
-    if(snd){
-      snd.play();
-    }
-  }
-
-  media.playpagesounds = function(index){
-
-    this.stopsounds();
-    
-    var fx = this.sounds["audio/pagefx/page" + index];
-    if(!fx){
-      return;
-    }
-    
-    fx.play();
-
-    if(global_settings.voice_audio){
-      var speech = this.sounds["audio/pagespeech/page" + index];
-      speech.play();
-    }
-  }
-
-  media.playsound = function(name){
-    var snd = this.sounds[name];
-
-    if(snd){
-      snd.play();
-    }
-  }
-
-  /*
-  
-    --------------------------------------------
-    --------------------------------------------
-
-
-    STOP SOUNDS
-
-
-    --------------------------------------------
-    --------------------------------------------
-    
-  */
-
-  media.stopsounds = function(){
-    var self = this;
-
-    clearTimeout(this.seqid);
-
-    for(var name in this.sounds){
-      var snd = self.sounds[name];
-
-      if(self.is_android){
-        snd.seekTo(0);
-        snd.stop();
-        snd.release();
-      }
-      else{
-        snd.stop();  
-      }
-    }
-  }
-
-  for(var i in Emitter.prototype){
-    media[i] = Emitter.prototype[i];
-  }
-
-  return media;
-}
-});
-require.register("storytimeisland-book/platform.js", function(exports, require, module){
-// this is the stub
-
-var has3d = require('has-translate3d');
-
-module.exports = function storytimeisland_platform(){
-  
-  var is_3d = has3d;
-  var is_phonegap = false;
-  var is_android = false;
-
-  if(window.$phonegap){
-    is_phonegap = true;
-    /*
-    
-      androids
-      
-    */
-    if((device.platform || '').toLowerCase().match(/android/)){
-      is_android = true;
-      if(device.version<4){
-        is_3d = false;
-      }
-    }
-
-    
-  }
-
-  return {
-    is_phonegap:is_phonegap,
-    is_3d:is_3d,
-    is_android:is_android
-  }
-}
-
-
-});
-require.register("storytimeisland-book/texthighlighter.js", function(exports, require, module){
-// this is the stub
-
-/*
-
-  an overlay of the text on a page that highlights as the text is being read
-  
-*/
-var $ = require('jquery');
-var Emitter = require('emitter');
-
-module.exports = function storytimeisland_texthighlighter(html, timings){
-
-  $('.text_highlighter').remove();
-
-  var $elem = $(html);
-
-  $elem.addClass('text_highlighter');
-  $elem.show();
-  $elem.css({
-    position:'absolute',
-    left:'0px',
-    top:'0px',
-    width:'100%',
-    height:'100%'
-  })
-
-  $elem.find('.pagebg').css({
-    'background':'url()'
-  })
-
-  var text = $elem.find('.pagetext').html().replace(/<br>/g, "\n");
-
-  text = text.replace(/([\w\.,'"-\?\!]+)/g, function(match, word){
-    return '<span class="highlightspan">' + word + '</span>';
-  }).replace(/\n/g, '<br>');
-
-  $elem.find('.pagetext').html(text);
-
-  var highlightspans = $elem.find('.highlightspan');
-
-  highlightspans.css({
-    color:'red',
-    opacity:0
-  })
-
-  var highlighter = {};
-  highlighter.elem = $elem;
-
-  for(var i in Emitter.prototype){
-    highlighter[i] = Emitter.prototype[i];
-  }
-
-  highlighter.reset = function(){
-    clearTimeout(this.timeoutid);
-    $elem.remove();
-  }
-
-  highlighter.start = function(){
-    var currentindex = 0;
-    var usetimings = [].concat(timings);
-
-    var lastiming = null;
-
-    function runhighlight(){
-      if(usetimings.length<=0){
-        return;
-      }
-      var timing = usetimings.shift();
-      var useindex = currentindex;
-      currentindex++;
-      
-      var gap = timing;
-
-      if(lastiming){
-        gap -= lastiming;
-      }
-
-      lastiming = timing;
-
-      setTimeout(function(){
-        highlightspans.eq(useindex).css({
-          opacity:1
-        })  
-
-        setTimeout(function(){
-          highlightspans.eq(useindex).addClass('animator').css({
-            opacity:0
-          })
-        }, 1000)
-
-        runhighlight();
-      }, gap)
-    }
-
-    setTimeout(runhighlight, 300);
-  }
-
-  return highlighter;
-
-}
+require.register("storytimeisland-book/templates/book.js", function(exports, require, module){
+module.exports = '<div class="storytimeisland_book">\n	<div id="shadow"></div>\n    <div id="book">\n      \n    </div>\n    <div id="lastpagehtml" style="display:none;position:absolute;padding-left:50px;">\n      \n    </div>\n    \n    <div class="arrow leftarrow"></div>\n    <div class="arrow rightarrow"></div>\n</div>';
 });
 
 
 
 
-require.alias("component-emitter/index.js", "storytimeisland-book/deps/emitter/index.js");
-require.alias("component-emitter/index.js", "emitter/index.js");
-require.alias("component-indexof/index.js", "component-emitter/deps/indexof/index.js");
 
 require.alias("component-jquery/index.js", "storytimeisland-book/deps/jquery/index.js");
 require.alias("component-jquery/index.js", "jquery/index.js");
-
-require.alias("component-has-translate3d/index.js", "storytimeisland-book/deps/has-translate3d/index.js");
-require.alias("component-has-translate3d/index.js", "has-translate3d/index.js");
-require.alias("component-transform-property/index.js", "component-has-translate3d/deps/transform-property/index.js");
 
 require.alias("binocarlos-pageturner/index.js", "storytimeisland-book/deps/pageturner/index.js");
 require.alias("binocarlos-pageturner/templates/booktemplate.js", "storytimeisland-book/deps/pageturner/templates/booktemplate.js");
@@ -12594,4 +11038,11 @@ require.alias("component-transform-property/index.js", "binocarlos-pageturner/de
 require.alias("component-jquery/index.js", "binocarlos-pageturner/deps/jquery/index.js");
 
 require.alias("binocarlos-pageturner/index.js", "binocarlos-pageturner/index.js");
+require.alias("binocarlos-storytimeisland-platform/index.js", "storytimeisland-book/deps/storytimeisland-platform/index.js");
+require.alias("binocarlos-storytimeisland-platform/index.js", "storytimeisland-book/deps/storytimeisland-platform/index.js");
+require.alias("binocarlos-storytimeisland-platform/index.js", "storytimeisland-platform/index.js");
+require.alias("component-has-translate3d/index.js", "binocarlos-storytimeisland-platform/deps/has-translate3d/index.js");
+require.alias("component-transform-property/index.js", "component-has-translate3d/deps/transform-property/index.js");
+
+require.alias("binocarlos-storytimeisland-platform/index.js", "binocarlos-storytimeisland-platform/index.js");
 require.alias("storytimeisland-book/index.js", "storytimeisland-book/index.js");

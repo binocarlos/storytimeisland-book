@@ -4,27 +4,18 @@
   "version": "0.0.3",
   "keywords": [],
   "dependencies": {
-    "component/emitter": "*",
     "component/jquery": "*",
-    "component/has-translate3d": "*",
-    "binocarlos/pageturner": "*"
+    "binocarlos/pageturner": "*",
+    "binocarlos/storytimeisland-platform": "*"
   },
   "development": {},
   "styles": [
     "book.css"
   ],
   "main":"index.js",
-  "fonts": [
-    "sassoon.otf"
-  ],
   "scripts": [
     "index.js",
-    "dictionary.js",
-    "buzz.js",
-    "gallery.js",
-    "media.js",
-    "platform.js",
-    "texthighlighter.js"
+    "templates/book.js"
   ],
   "remotes": []
 }

@@ -1,0 +1,16 @@
+{
+  "name": "storytimeisland-platform",
+  "description": "Knows how to deal with different browsers for playing a storytime island book",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "component/has-translate3d": "*"
+  },
+  "development": {},
+  "main": "index.js",
+  "scripts": [
+    "index.js"
+  ],
+  "remotes": [],
+  "repo": "https://raw.github.com/binocarlos/storytimeisland-platform"
+}

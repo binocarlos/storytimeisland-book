@@ -1,59 +1,59 @@
 // this is the stub
 
 var $ = require('jquery');
-var has3d = require('has-translate3d');
-var Emitter = require('emitter');
-var Dictionary = require('./dictionary');
-var TextHighlighter = require('./texthighlighter');
-var Gallery = require('./gallery');
-var Hammer = require('hammer');
-var PageTurner = require('pageturner');
 
 
 /*
+var has3d = require('has-translate3d');
+var Dictionary = require('./dictionary');
+var TextHighlighter = require('./texthighlighter');
+var Gallery = require('./gallery');
+var Media = require('./media');
+var Hammer = require('hammer');
 
-  bookselector: the selector for what page element to render the book inside of
+*/
 
-  bookdata: the raw json object describing the book
+var PageTurner = require('pageturner');
+var Platform = require('storytimeisland-platform');
 
-  apply_pageclass: a classname to add to each page
+/*
 
-  is_3d: whether to allow 3d mode
-
-  is_phonegap: whether we are running inside an app
-
-  perspective: the perspective to apply
+ 
 
 */
 module.exports = function storytimeisland_book(options){
 
   //bookselector, html, templates, data, global_settings){
 
+
+  /*
+  
+    SETTINGS
+    
+  */
   var bookselector = options.selector || '#book';
   var bookdata = options.data || {};
   var bookconfig = bookdata.config;
   var apply_pageclass = options.apply_pageclass || 'bookpage';
-  var is_3d = options.allow3d;
-  var is_phonegap = options.is_phonegap;
+  
   var perspective = options.perspective || 950;
+  var dictionary_mode = options.dictionary_active;
+  var highlighter_mode = options.highlighter_active;
+
+  var platform = Platform(options);
+  var is_3d = platform.is_3d;
+  var is_phonegap = platform.is_phonegap;
+
 
   var startpage = bookconfig.test_page || 0;
 
   var rendered = false;
 
-  if(is_phonegap){
-    /*
+  /*
+  
+    STATE
     
-      androids
-      
-    */
-    if((device.platform || '').toLowerCase().match(/android/)){
-      if(device.version<4){
-        is_3d = false;
-      }
-    }
-  }
-
+  */
   var activedictionary = null;
   var activehighlighter = null;
 
@@ -63,45 +63,17 @@ module.exports = function storytimeisland_book(options){
   var currentsize = {};
   var currentpos = {};
 
-  var bookelem = $(bookselector);
-
-  var gallery = Gallery(bookdata.pages);
-
-var media = Media(window.$storytimebook, global_settings);
-
-  media.on('loaded:all', function(){
-
-    if(window.$storytimebook.config.test_page>=0){
-      show_book();
-    }
-    else{
-      show_home();  
-    }
-    
-  })
-
-  media.on('loaded:sound', function(src){
-    
-  })
-
-
-  home_factory.on('teddysound', function(){
-    media.playsound('audio/teddy/all');
-  })
-
-  home_factory.on('loadbook', function(){
-    media.stopsounds();
-    activemodule.destroy();
-    setTimeout(function(){
-      show_book();  
-    }, 10)
-    
-  })
-
-  
   /*
   
-    grab the source of the book
+    ELEM
+    
+  */
+  var bookelem = $(bookselector);
+
+
+  /*
+  
+    HTML SOURCE
     
   */
   var html = bookdata.pages.map(function(page, index){
@@ -131,8 +103,9 @@ var media = Media(window.$storytimebook, global_settings);
   // inject the HTML
   $(bookselector).html(html.join("\n"));
 
-  var pagecount = bookelem.find(pageselector).length;
+  var pagecount = bookelem.find('.page').length;
 
+  // then create the pageturner
   var book = new PageTurner({
     has3d:is_3d,
     bookselector:bookselector,
@@ -141,7 +114,99 @@ var media = Media(window.$storytimebook, global_settings);
     startpage:startpage,
     perspective:perspective
   })
+
+  /*
   
+    MEDIA
+    
+
+  var media = Media(bookdata, global_settings);
+
+  media.on('loaded:all', function(){
+
+    book.emit('media:loaded');
+    
+  })
+
+  media.on('loaded:sound', function(src){
+    
+  })
+
+  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*
+  
+    GALLERY
+    
+
+  var gallery = Gallery({
+    pages:bookdata.pages,
+    append_to:bookelem.parent()
+  });
+
+  gallery.on('loadpage', function(index){
+    close_gallery();
+    if(index==0){
+      apply_shadow(0);
+
+    }
+    else if(index==pagecount-1){
+      apply_shadow(pagecount-1);
+    }
+    $('#lastpagehtml').hide();
+    book.animate_index(index);
+  })
+
+  function open_gallery(){
+    gallery.$elem.css({
+      top:'0px'
+    })
+    setTimeout(function(){
+      gallery.active = true;
+      //$('#homebutton').show();
+      //$('#teddybutton .normal').hide();
+      //$('#teddybutton .highlight').show();
+    }, 10)
+  }
+
+  function close_gallery(){
+    gallery.$elem.css({
+      top:'-120px'
+    })
+    setTimeout(function(){
+      gallery.active = false;
+      //$('#homebutton').hide();
+      //$('#teddybutton .normal').show();
+      //$('#teddybutton .highlight').hide();
+    }, 10)
+    
+    
+  }
+
+
+  */
+
+
+/*
+
+  function get_page_data(forpage){
+    return bookdata.pages[arguments.length>0 ? forpage : book.currentpage];
+  }
+
+
+
   function get_current_page(){
     return book.currentpage || startpage;
   }
@@ -177,35 +242,9 @@ var media = Media(window.$storytimebook, global_settings);
     }
   }
 
-  function open_gallery(){
-    gallery.$elem.css({
-      top:'0px'
-    })
-    setTimeout(function(){
-      gallery.active = true;
-      //$('#homebutton').show();
-      //$('#teddybutton .normal').hide();
-      //$('#teddybutton .highlight').show();
-    }, 10)
-    
-    
-  }
 
-  function close_gallery(){
-    gallery.$elem.css({
-      top:'-120px'
-    })
-    setTimeout(function(){
-      gallery.active = false;
-      //$('#homebutton').hide();
-      //$('#teddybutton .normal').show();
-      //$('#teddybutton .highlight').hide();
-    }, 10)
-    
-    
-  }
 
-/*
+
   function clickteddy(){
     if(gallery.active){
       close_gallery();
@@ -222,7 +261,7 @@ var media = Media(window.$storytimebook, global_settings);
     },500)
     
   }
-*/
+
 
   book.on('ready', function(){
     //$(bookselector).addClass('dropshadow');
@@ -286,6 +325,8 @@ var media = Media(window.$storytimebook, global_settings);
     loading = true;
   })
 
+
+
   var currentindex = -1;
 
   var shadowloaded = false;
@@ -326,7 +367,7 @@ var media = Media(window.$storytimebook, global_settings);
 
     // only do the text highlighting when the voice is reading
     if(global_settings.voice_audio){
-      activehighlighter = TextHighlighter(html[index], data.config.highlighters ? data.config.highlighters[index] : []);
+      activehighlighter = TextHighlighter(html[index], bookdata.config.highlighters ? bookdata.config.highlighters[index] : []);
 
       if(index!=currentindex){
         activehighlighter.start();  
@@ -340,7 +381,7 @@ var media = Media(window.$storytimebook, global_settings);
     
 
     activedictionary.on('sound', function(mp3){
-      book_factory.emit('dictionary', mp3);
+      book.emit('dictionary', mp3);
     })
 
     if(book.triggernext){
@@ -348,7 +389,7 @@ var media = Media(window.$storytimebook, global_settings);
       book.triggernext = null;
     }
     else if(index!=currentindex){
-      book_factory.emit('view:page', index);
+      book.emit('view:page', index);
     }
 
     gallery.set_current_page(index);
@@ -377,7 +418,7 @@ var media = Media(window.$storytimebook, global_settings);
     }
 
     animating = true;
-    book_factory.emit('animate');
+    book.emit('animate');
   })
 
   book.on('animated', function(side){
@@ -393,18 +434,7 @@ var media = Media(window.$storytimebook, global_settings);
     //apply_shadow(side);
   })
 
-  gallery.on('loadpage', function(index){
-    close_gallery();
-    if(index==0){
-      apply_shadow(0);
 
-    }
-    else if(index==pagecount-1){
-      apply_shadow(pagecount-1);
-    }
-    $('#lastpagehtml').hide();
-    book.animate_index(index);
-  })
 
   book.ondragstart = function(ev){
     dragging = true;
@@ -478,11 +508,6 @@ var media = Media(window.$storytimebook, global_settings);
         return;
       }
 
-      /*
-    
-        where they clicked
-        
-      */
       var evpos = {
         x:ev.touches[0].x,
         y:ev.touches[0].y
@@ -494,11 +519,7 @@ var media = Media(window.$storytimebook, global_settings);
     }
   }
 
-  function get_page_data(forpage){
-    return data.pages[arguments.length>0 ? forpage : book.currentpage];
-  }
-
-  book.render();
+  //book.render();
 
   $('#shadow').hide();
 
@@ -507,11 +528,8 @@ var media = Media(window.$storytimebook, global_settings);
     shadowloaded = true;
   }, 1000)
 
-  book.destroy = function(){
-    $(bookselector).html('');
-    gallery.destroy();
-  }
-
   return book;
+
+  */
 }
 
