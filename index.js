@@ -15,6 +15,7 @@ var Hammer = require('hammer');
 
 var PageTurner = require('pageturner');
 var Platform = require('storytimeisland-platform');
+var Media = require('storytimeisland-media');
 
 /*
 
@@ -37,13 +38,14 @@ module.exports = function storytimeisland_book(options){
   var apply_pageclass = options.apply_pageclass || 'bookpage';
   
   var perspective = options.perspective || 950;
-  var dictionary_mode = options.dictionary_active;
-  var highlighter_mode = options.highlighter_active;
-
+  
   var platform = Platform(options);
   var is_3d = platform.is_3d;
   var is_phonegap = platform.is_phonegap;
 
+  var speech_active = options.speech;
+  var dictionary_active = options.dictionary;
+  var highlighter_active = options.highlighter;
 
   var startpage = bookconfig.test_page || 0;
 
@@ -114,6 +116,20 @@ module.exports = function storytimeisland_book(options){
     startpage:startpage,
     perspective:perspective
   })
+
+  var media = Media(bookdata, {
+    speech_active:speech_active    
+  })
+
+  media.on('loaded:all', function(){
+    book.emit('loaded');
+  })
+
+  book.load = function(){
+    media.load();
+  }
+
+  return book;
 
   /*
   

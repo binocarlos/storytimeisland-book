@@ -6,7 +6,8 @@
   "dependencies": {
     "component/jquery": "*",
     "binocarlos/pageturner": "*",
-    "binocarlos/storytimeisland-platform": "*"
+    "binocarlos/storytimeisland-platform": "*",
+    "binocarlos/storytimeisland-media": "*"
   },
   "development": {},
   "styles": [
