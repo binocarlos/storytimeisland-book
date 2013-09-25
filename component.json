@@ -7,16 +7,17 @@
     "component/jquery": "*",
     "binocarlos/pageturner": "*",
     "binocarlos/storytimeisland-platform": "*",
-    "binocarlos/storytimeisland-media": "*"
+    "binocarlos/storytimeisland-media": "*",
+    "binocarlos/storytimeisland-texthighlighter": "*",
+    "binocarlos/storytimeisland-dictionary": "*"
   },
   "development": {},
   "styles": [
     "book.css"
   ],
-  "main":"index.js",
+  "main": "index.js",
   "scripts": [
-    "index.js",
-    "templates/book.js"
+    "index.js"
   ],
   "remotes": []
 }

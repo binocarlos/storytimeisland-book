@@ -1,8 +1,5 @@
-build: index.js templates/book.js components
+build: index.js components
 	@component build
-
-templates/book.js: templates/book.html
-	@component convert $<
 
 components:
 	@component install
