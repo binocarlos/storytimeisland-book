@@ -75,6 +75,8 @@
 }
 
 
+
+
 /*
 
   css
@@ -89,44 +91,7 @@
   box-sizing: border-box;
 }
 
-.storytimeisland-book > #shadow{
-  display:none;
-  position:absolute;
-  -moz-box-shadow: 10px 10px 10px rgba(0,0,0,0.5);
-  -webkit-box-shadow: 10px 10px 10px rgba(0,0,0,0.5);
-  box-shadow: 10px 10px 10px rgba(0,0,0,0.5);
-}
-
-.storytimeisland-book > .arrow{
-  width:25px;
-  height:100px;
-  cursor:pointer;
-  display:none;
-}
-
-.storytimeisland-book > .leftarrow{
-  cursor:pointer;
-  padding-right:50px;
-  position:absolute;
-  left:10px;
-  top:40%;
-  background:url("storytimeisland-book/./img/leftarrow.png");
-  background-repeat: no-repeat;
-  background-position: 0% 50%;
-}
-
-.storytimeisland-book > .rightarrow{
-  cursor:pointer;
-  padding-left:50px;
-  position:absolute;
-  right:10px;
-  top:40%;
-  background:url("storytimeisland-book/./img/rightarrow.png");
-  background-repeat: no-repeat;
-  background-position: 100% 50%;
-}
-
-.storytimeisland-book img{
+img{
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
@@ -135,12 +100,12 @@
   -webkit-user-drag: none;
 }
 
-.storytimeisland-book .page{
+.page{
   display:none;
 
 }
 
-.storytimeisland-book .bookpage{
+.bookpage{
   font-family: Sassoon;
   font-size:14pt;
   
@@ -166,7 +131,7 @@
   box-shadow: 10px 10px 10px rgba(0,0,0,0.5);
 }
 
-.storytimeisland-book > #book .pagebg{
+#book .pagebg{
   width:100% !important;
   height:100% !important;
   background-size:contain !important;
@@ -174,7 +139,7 @@
   background-position:center !important;
 }
 
-.storytimeisland-book .pagetext{
+.pagetext{
   padding:0px;
   font-family: Sassoon;
   font-size:19pt;

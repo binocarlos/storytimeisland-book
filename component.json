@@ -6,10 +6,12 @@
   "dependencies": {
     "component/jquery": "*",
     "binocarlos/pageturner": "*",
+    "component/hammer.js": "*",
     "binocarlos/storytimeisland-platform": "*",
     "binocarlos/storytimeisland-media": "*",
     "binocarlos/storytimeisland-texthighlighter": "*",
-    "binocarlos/storytimeisland-dictionary": "*"
+    "binocarlos/storytimeisland-dictionary": "*",
+    "binocarlos/storytimeisland-gallery": "*"
   },
   "development": {},
   "styles": [
@@ -17,7 +19,8 @@
   ],
   "main": "index.js",
   "scripts": [
-    "index.js"
+    "index.js",
+    "template.js"
   ],
   "remotes": []
 }
