@@ -137,22 +137,16 @@ module.exports = function storytimeisland_book(options){
         sort out the DOM
         
       */
-      console.log('-------------------------------------------');
-      console.log('media');
       book.emit('media:loaded');
     }
   }
 
   media.on('loaded:sounds', function(){
-    console.log('-------------------------------------------');
-    console.log('sounds');
     loading_status.sounds = true;
     checkloaded();
   })
 
   media.on('loaded:images', function(){
-    console.log('-------------------------------------------');
-    console.log('images');
     loading_status.images = true;
     checkloaded();
   })
@@ -282,11 +276,6 @@ module.exports = function storytimeisland_book(options){
     
   */
   book.load = function(options){
-
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.log('loading');
-    
     media.load(options);
   }
 
