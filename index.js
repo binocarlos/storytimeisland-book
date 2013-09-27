@@ -5,7 +5,7 @@ var Hammer = require('hammer');
 
 var PageTurner = require('pageturner');
 var Platform = require('storytimeisland-platform');
-var Media = require('storytimeisland-media');
+var MediaLib = require('storytimeisland-media');
 var Dictionary = require('storytimeisland-dictionary');
 var TextHighlighter = require('storytimeisland-texthighlighter');
 var Gallery = require('storytimeisland-gallery');
@@ -126,7 +126,7 @@ module.exports = function storytimeisland_book(options){
 
   book.pagecount = pagecount;
 
-  var media = Media(bookdata);
+  var media = MediaLib(bookdata);
 
   var loading_status = {};
   function checkloaded(){
@@ -137,16 +137,22 @@ module.exports = function storytimeisland_book(options){
         sort out the DOM
         
       */
-      book.emit('loaded');
+      console.log('-------------------------------------------');
+      console.log('media');
+      book.emit('media:loaded');
     }
   }
 
   media.on('loaded:sounds', function(){
+    console.log('-------------------------------------------');
+    console.log('sounds');
     loading_status.sounds = true;
     checkloaded();
   })
 
   media.on('loaded:images', function(){
+    console.log('-------------------------------------------');
+    console.log('images');
     loading_status.images = true;
     checkloaded();
   })
@@ -276,6 +282,11 @@ module.exports = function storytimeisland_book(options){
     
   */
   book.load = function(options){
+
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.log('loading');
+    
     media.load(options);
   }
 
