@@ -63,9 +63,6 @@ module.exports = function storytimeisland_book(options){
   var activedictionary = null;
   var activehighlighter = null;
 
-  var dragging = null;
-  var animating = false;
-  var loading = false;
   var currentsize = {};
   var currentpos = {};
 
@@ -124,34 +121,38 @@ module.exports = function storytimeisland_book(options){
     perspective:perspective
   })
 
+  var gallery = Gallery({
+    pages:bookdata.pages,
+    append_to:container
+  });
+
+
+  book.loading = false;
+  book.dragging = false;
+  book.animating = false;
+
   book.pagecount = pagecount;
 
   var media = MediaLib(bookdata);
 
   var loading_status = {};
-  function checkloaded(){
-    if(loading_status.images && loading_status.sounds){
-      
-      /*
-  
-        sort out the DOM
-        
-      */
-      book.emit('media:loaded');
-    }
-  }
 
   media.on('loaded:sounds', function(){
     loading_status.sounds = true;
-    checkloaded();
   })
 
-  media.on('loaded:images', function(){
-    loading_status.images = true;
-    checkloaded();
+  var images_loaded = 0;
+
+  media.on('loaded:image', function(src, index){
+    //loading_status.images = true;
+    images_loaded++;
+    gallery.enable_page(index);
+
+    if(images_loaded==5){
+      book.emit('media:loaded');
+    }
   })
 
-    
   /*
   
     HELPER FUNCTIONS
@@ -185,7 +186,7 @@ module.exports = function storytimeisland_book(options){
   }
 
   function taparrow(direction){
-    if(animating || loading){
+    if(book.animating || book.loading){
       book.triggernext = function(){
         book.animate_direction(direction);
       }
@@ -230,13 +231,6 @@ module.exports = function storytimeisland_book(options){
     GALLERY
     
   */
-
-
-
-  var gallery = Gallery({
-    pages:bookdata.pages,
-    append_to:container
-  });
 
   gallery.$elem.hide();
 
@@ -381,7 +375,7 @@ module.exports = function storytimeisland_book(options){
 
   book.on('loaded', function(index){
 
-    loading = false;
+    book.loading = false;
 
     if(shadowloaded){
       shadowelem.css({
@@ -397,39 +391,79 @@ module.exports = function storytimeisland_book(options){
       activedictionary.on('sound', function(mp3){
         media.playdictionarysound(mp3);
       })
-    }
 
-    if(options.play_speech() && index>0){
-      var html_string = html[index];
-      activehighlighter = TextHighlighter(html_string, bookdata.config.highlighters ? bookdata.config.highlighters[index] : []);
+      activedictionary.on('hint', function(entry, pos){
+        var popup = $('<div class="dictionaryhint"><img src="/build/storytimeislandbook/img/arrow.png" width=100 /></div>');
 
-      activehighlighter.elem.css({
-        position:'absolute',
-        left:bookelem.offset().left + 'px',
-        top:bookelem.offset().top + 'px'
+        popup.css({
+          left:pos.x + 'px',
+          top:pos.y + 'px'
+        })
+
+        $('body').append(popup);
+
+        setTimeout(function(){
+          popup.remove();
+        }, 2000);
       })
+    }
 
-      if(index!=currentindex){
-        activehighlighter.start();  
+    function playpage(){
+      if(options.play_speech() && index>0){
+        var html_string = html[index];
+        activehighlighter = TextHighlighter(html_string, bookdata.config.highlighters ? bookdata.config.highlighters[index] : []);
+
+        activehighlighter.elem.css({
+          position:'absolute',
+          left:bookelem.offset().left + 'px',
+          top:bookelem.offset().top + 'px'
+        })
+
+        if(index!=currentindex){
+          activehighlighter.start();  
+        }
+        bookelem.append(activehighlighter.elem);
+        activehighlighter.elem.width(currentsize.width).height(currentsize.height);
       }
-      bookelem.append(activehighlighter.elem);
-      activehighlighter.elem.width(currentsize.width).height(currentsize.height);
-    }
 
-    if(book.triggernext){
-      book.triggernext();
-      book.triggernext = null;
-    }
-    else if(index!=currentindex){
-      book.emit('view:page', index);
-    }
+      if(book.triggernext){
+        book.triggernext();
+        book.triggernext = null;
+      }
+      else if(index!=currentindex){
+        book.emit('view:page', index);
+      }
 
-    gallery.set_current_page(index);
+      gallery.set_current_page(index);
 
-    currentindex = index;
+      currentindex = index;
+    }
+    
+
+    if(index==1 && !dictionaryhint && activedictionary){
+      
+      activedictionary.render_index(0);
+
+      setTimeout(function(){
+        activedictionary.render_index(1);
+      }, 500)
+
+      setTimeout(function(){
+        activedictionary.render_index(2);
+      }, 1000)
+
+      setTimeout(function(){
+        playpage();
+      }, 3000)
+
+      dictionaryhint = true;
+    }
+    else{
+      playpage();
+    }
   })
 
-  book.on('animate', function(side){
+  book.on('animate', function(side, index){
 
     if(activedictionary){
       activedictionary.reset();
@@ -439,34 +473,16 @@ module.exports = function storytimeisland_book(options){
       activehighlighter.reset();
     }
 
-    if(book.currentpage==1 && side=='left'){
-      apply_shadow(0);
-    }
-    else if(book.currentpage==pagecount-2 && side=='right'){
-      apply_shadow(pagecount-1);
-    }
-    else if(book.currentpage==pagecount-1){
-      lastpageelem.hide();
-    }
-
-    animating = true;
+    book.animating = true;
 
     media.stopsounds();
   })
 
-  book.on('animated', function(side){
+  book.on('animated', function(side, index){
 
-    if(book.currentpage==0 && side=='right'){
-      apply_shadow(1);
-    }
-    else if(book.currentpage==pagecount-1 && side=='left'){
-      apply_shadow(pagecount-2);
-    }
-    else{
-      //apply_shadow(side);  
-    }
+    book.animating = false;
 
-    animating = false;
+    apply_shadow(index);
 
   })
 
@@ -475,8 +491,12 @@ module.exports = function storytimeisland_book(options){
     
   })
 
+  // have we shown the dictionary hint arrow?
+  var dictionaryhint = false;
+
   book.on('load', function(index){
-    loading = true;
+    book.loading = true;
+
   })
 
   book.on('view:page', function(index){
@@ -508,24 +528,24 @@ module.exports = function storytimeisland_book(options){
     tap_max_distance:9
   })
 
-  hammertime.ondragstart = function(ev){
-    dragging = true;
+  hammertime.ondragstart = book.ondragstart = function(ev){
+    book.dragging = true;
   }
 
-  hammertime.ondrag = function(ev){
-    if(!dragging){
+  hammertime.ondrag = book.ondrag = function(ev){
+    if(!book.dragging){
       return;
     }
 
     if(ev.distance>=15){
 
-      dragging = false;
+      book.dragging = false;
 
       if(gallery.active){
         gallery.animate(ev.direction=='left' ? 1 : -1);
       }
       else{
-        if(animating || loading){
+        if(book.animating || book.loading){
           book.triggernext = function(){
             book.animate_direction(ev.direction=='left' ? 1 : -1);
           }
@@ -539,11 +559,11 @@ module.exports = function storytimeisland_book(options){
     }
   }
 
-  hammertime.ondragend = function(ev){
-    dragging = false;
+  hammertime.ondragend = book.ondragend = function(ev){
+    book.dragging = false;
   }
 
-  hammertime.ontap = function(ev){
+  hammertime.ontap = book.ontap = function(ev){
     if(gallery.active){
       gallery.tap(ev);
       return;
