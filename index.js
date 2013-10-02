@@ -254,7 +254,6 @@ module.exports = function storytimeisland_book(options){
     close_gallery();
     if(index==0){
       apply_shadow(0);
-
     }
     else if(index==pagecount-1){
       apply_shadow(pagecount-1);
@@ -441,18 +440,28 @@ module.exports = function storytimeisland_book(options){
     
 
     if(index==1 && !dictionaryhint && activedictionary){
-      
+
+      book._cancelhint = false;
       activedictionary.render_index(0);
 
       setTimeout(function(){
+        if(book._cancelhint){
+          return;
+        }
         activedictionary.render_index(1);
       }, 500)
 
       setTimeout(function(){
+        if(book._cancelhint){
+          return;
+        }
         activedictionary.render_index(2);
       }, 1000)
 
       setTimeout(function(){
+        if(book._cancelhint){
+          return;
+        }
         playpage();
       }, 3000)
 
@@ -472,6 +481,18 @@ module.exports = function storytimeisland_book(options){
     if(activehighlighter){
       activehighlighter.reset();
     }
+
+    if(index==0){
+      apply_shadow(0);
+    }
+    else if(index==pagecount-1){
+      apply_shadow(pagecount-1);
+    }
+
+    lastpageelem.hide();
+
+    $('.dictionaryhint').remove();
+    book._cancelhint = true;
 
     book.animating = true;
 
