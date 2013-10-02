@@ -392,7 +392,7 @@ module.exports = function storytimeisland_book(options){
       })
 
       activedictionary.on('hint', function(entry, pos){
-        var popup = $('<div class="dictionaryhint"><img src="/build/storytimeislandbook/img/arrow.png" width=100 /></div>');
+        var popup = $('<div class="dictionaryhint"><img src="build/storytimeislandbook/img/arrow.png" width=100 /></div>');
 
         popup.css({
           left:pos.x + 'px',
