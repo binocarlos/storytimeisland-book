@@ -214,7 +214,7 @@ module.exports = function storytimeisland_book(options){
       shadowelem.css({
         opacity:1
       });
-    }, 500)
+    }, 100)
     if(activedictionary){
       activedictionary.reset();
     }
@@ -442,20 +442,20 @@ module.exports = function storytimeisland_book(options){
     if(index==1 && !dictionaryhint && activedictionary){
 
       book._cancelhint = false;
-      activedictionary.render_index(0);
+      activedictionary.render_index(0, true);
 
       setTimeout(function(){
         if(book._cancelhint){
           return;
         }
-        activedictionary.render_index(1);
+        activedictionary.render_index(1, true);
       }, 500)
 
       setTimeout(function(){
         if(book._cancelhint){
           return;
         }
-        activedictionary.render_index(2);
+        activedictionary.render_index(2, true);
       }, 1000)
 
       setTimeout(function(){
