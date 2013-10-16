@@ -1,1 +1,1 @@
-module.exports = '<div class="storytimeisland_book halfsize bookanimator">\n    <div id="shadow"></div>\n    <div id="book">\n      \n    </div>\n    <div id="lastpage" style="display:none;position:absolute;padding-left:50px;">\n\n    </div>\n    \n</div>';
+module.exports = '<div class="storytimeisland_book halfsize">\n		<div id="bookwrapper">\n	    <div id="shadow"></div>\n	    <div id="book">\n	      \n	    </div>\n	    <div id="lastpage" style="display:none;position:absolute;padding-left:50px;">\n\n	    </div>\n	  </div>\n    \n</div>';

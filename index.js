@@ -200,34 +200,6 @@ module.exports = function storytimeisland_book(options){
 
   /*
   
-    SIZING
-    
-  */
-  var shadowtimeout = null;
-
-  $(window).on('resize', function(){
-    shadowelem.css({
-      opacity:0
-    });
-    clearTimeout(shadowtimeout);
-    shadowtimeout = setTimeout(function(){
-      shadowelem.css({
-        opacity:1
-      });
-    }, 100)
-    if(activedictionary){
-      activedictionary.reset();
-    }
-
-    if(activehighlighter){
-      activehighlighter.reset();
-    }
-    
-  })
-
-
-  /*
-  
     GALLERY
     
   */
@@ -311,22 +283,64 @@ module.exports = function storytimeisland_book(options){
     gallery.$elem.fadeOut();
   }
 
-  book.fullsize = function(){
-    holderelem.removeClass('halfsize');
-  }
-
-  book.halfsize = function(){
-    
-    holderelem.addClass('halfsize');
-  }
 
   /*
   
-    LOGIC EVENTS
+    SIZING
     
   */
-  book.on('resize', function(newsize){
+  var shadowtimeout = null;
+
+  $(window).on('resize', function(){
+    /*
+    shadowelem.css({
+      opacity:0
+    });*/
+
+    /*
+    holderelem.css({
+      opacity:0
+    })
+  
+    clearTimeout(shadowtimeout);
+    shadowtimeout = setTimeout(function(){
+      shadowelem.css({
+        opacity:1
+      });
+    }, 100)
     
+    if(activedictionary){
+      activedictionary.reset();
+    }
+
+    if(activehighlighter){
+      activehighlighter.reset();
+    }*/
+    
+  })
+
+  var lastsize = null;
+
+  book.on('resize', function(newsize){
+
+    if(!newsize){
+      newsize = lastsize;
+    }
+
+    lastsize = newsize;
+    
+    if(activedictionary){
+      activedictionary.reset();
+    }
+
+    if(activehighlighter){
+      activehighlighter.reset();
+    }
+
+    holderelem.css({
+      opacity:0
+    })
+
     if(activedictionary){
       activedictionary.reset();
     }
@@ -354,6 +368,7 @@ module.exports = function storytimeisland_book(options){
       }
 
       var xpos = windowsize.width/2 - newsize.width/2;
+
       var ypos = windowsize.height/2 - newsize.height/2;
 
       currentpos = {
@@ -382,6 +397,14 @@ module.exports = function storytimeisland_book(options){
       })
 
       book.load_page(book.currentpage);
+
+      setTimeout(function(){
+        holderelem.hide();
+        holderelem.css({
+          opacity:1
+        })
+        holderelem.fadeIn();
+      }, 500);
 
     }, 10)
 
