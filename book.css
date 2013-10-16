@@ -47,6 +47,42 @@ img{
 
 }
 
+.storytimeisland_book{
+  position:absolute;
+  left:0px;
+  top:0px;
+
+  transform-origin:50% 50%;
+  -webkit-transform-origin:50% 50%;
+  -ms-transform-origin:50% 50%;
+  -moz-transform-origin:50% 50%;
+
+
+}
+
+.bookanimator{
+  transition-timing-function:cubic-bezier(0.680, -0.550, 0.265, 1.550);
+  -webkit-transition-timing-function:cubic-bezier(0.680, -0.550, 0.265, 1.550);
+  -ms-transition-timing-function:cubic-bezier(0.680, -0.550, 0.265, 1.550);
+  -moz-transition-timing-function:cubic-bezier(0.680, -0.550, 0.265, 1.550);
+
+  transition:transform 400ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+  -webkit-transition:-webkit-transform 400ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+  -ms-transition:-ms-transform 400ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+  -moz-transition:-moz-transform 400ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+}
+
+.halfsize{
+  
+  transform:scale(.5,.5);
+  -webkit-transform:scale(.5,.5);
+  -ms-transform:scale(.5,.5);
+  -moz-transform:scale(.5,.5);
+
+
+
+}
+
 .boxshadow{
   -moz-box-shadow: 10px 10px 10px rgba(0,0,0,0.5);
   -webkit-box-shadow: 10px 10px 10px rgba(0,0,0,0.5);
