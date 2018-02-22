@@ -5,8 +5,7 @@
   "keywords": [],
   "dependencies": {
     "component/jquery": "*",
-    "binocarlos/pageturner": "*",
-    "component/gesture": "*",
+    "binocarlos/pageturner": "*",    
     "binocarlos/storytimeisland-platform": "*",
     "binocarlos/storytimeisland-media": "*",
     "binocarlos/storytimeisland-texthighlighter": "*",

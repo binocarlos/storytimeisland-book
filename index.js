@@ -1,7 +1,6 @@
 // this is the stub
 
 var $ = require('jquery');
-var gesture = require('gesture');
 
 var PageTurner = require('pageturner');
 var Platform = require('storytimeisland-platform');
@@ -591,7 +590,7 @@ module.exports = function storytimeisland_book(options){
       TOUCH EVENTS
       
     */
-    var hammertime = gesture($(touch_selector).get(0), {
+    var hammertime = Hammer($(touch_selector).get(0), {
       drag_min_distance:10,
       tap_max_distance:9
     })
