@@ -1,7 +1,7 @@
 {
   "name": "storytimeisland-book",
   "description": "A book for the storytimeisland series",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "keywords": [],
   "dependencies": {
     "component/jquery": "*",
