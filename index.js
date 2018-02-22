@@ -1,7 +1,7 @@
 // this is the stub
 
 var $ = require('jquery');
-var Hammer = require('hammer');
+var gesture = require('gesture');
 
 var PageTurner = require('pageturner');
 var Platform = require('storytimeisland-platform');
@@ -591,16 +591,18 @@ module.exports = function storytimeisland_book(options){
       TOUCH EVENTS
       
     */
-    var hammertime = new Hammer($(touch_selector).get(0), {
+    var hammertime = gesture($(touch_selector).get(0), {
       drag_min_distance:10,
       tap_max_distance:9
     })
 
-    hammertime.ondragstart = book.ondragstart = function(ev){
+    book.ondragstart = function(ev){
       book.dragging = true;
     }
 
-    hammertime.ondrag = book.ondrag = function(ev){
+    hammertime.on('drag start', book.ondragstart)
+
+    book.ondrag = function(ev){
       if(!book.dragging){
         return;
       }
@@ -627,11 +629,15 @@ module.exports = function storytimeisland_book(options){
       }
     }
 
-    hammertime.ondragend = book.ondragend = function(ev){
+    hammertime.on('drag', book.ondrag) 
+
+    book.ondragend = function(ev){
       book.dragging = false;
     }
 
-    hammertime.ontap = book.ontap = function(ev){
+    hammertime.on('drag end', book.ondragend)
+
+    book.ontap = function(ev){
       if(gallery.active){
         gallery.tap(ev);
         return;
@@ -655,14 +661,16 @@ module.exports = function storytimeisland_book(options){
       }
     }
 
-    hammertime.onswipe = function(ev){
+    hammertime.on('tap', book.ontap)
+
+    hammertime.on('swipe', function(ev){
 
       if(gallery.active && ev.direction=='up'){
         close_gallery();
         return;
       }
 
-    }
+    })
   }
 
   book.media = media;

@@ -6,7 +6,7 @@
   "dependencies": {
     "component/jquery": "*",
     "binocarlos/pageturner": "*",
-    "component/hammer.js": "*",
+    "component/gesture": "*",
     "binocarlos/storytimeisland-platform": "*",
     "binocarlos/storytimeisland-media": "*",
     "binocarlos/storytimeisland-texthighlighter": "*",
