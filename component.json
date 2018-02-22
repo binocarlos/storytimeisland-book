@@ -1,7 +1,7 @@
 {
   "name": "storytimeisland-book",
   "description": "A book for the storytimeisland series",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "keywords": [],
   "dependencies": {
     "component/jquery": "*",
@@ -10,7 +10,6 @@
     "binocarlos/storytimeisland-media": "*",
     "binocarlos/storytimeisland-texthighlighter": "*",
     "binocarlos/storytimeisland-dictionary": "*",
-    "binocarlos/storytimeisland-gallery": "*"
   },
   "development": {},
   "styles": [
