@@ -7,7 +7,6 @@ var Platform = require('storytimeisland-platform');
 var MediaLib = require('storytimeisland-media');
 var Dictionary = require('storytimeisland-dictionary');
 var TextHighlighter = require('storytimeisland-texthighlighter');
-var Gallery = require('storytimeisland-gallery');
 var template = require('./template');
 
 require('./hammer')
@@ -122,12 +121,6 @@ module.exports = function storytimeisland_book(options){
     perspective:perspective
   })
 
-  var gallery = Gallery({
-    pages:bookdata.pages,
-    append_to:container
-  });
-
-
   book.loading = false;
   book.dragging = false;
   book.animating = false;
@@ -147,7 +140,6 @@ module.exports = function storytimeisland_book(options){
   media.on('loaded:image', function(src, index){
     //loading_status.images = true;
     images_loaded++;
-    gallery.enable_page(index);
 
     if(images_loaded==5){
       book.emit('media:loaded');
@@ -199,42 +191,6 @@ module.exports = function storytimeisland_book(options){
   }
 
 
-  /*
-  
-    GALLERY
-    
-  */
-
-  gallery.$elem.hide();
-
-  function open_gallery(){
-    gallery.$elem.fadeIn();
-    setTimeout(function(){
-      gallery.active = true;
-      book.emit('gallery:open');
-    }, 10)
-  }
-
-  function close_gallery(){
-    gallery.$elem.fadeOut();
-    setTimeout(function(){
-      gallery.active = false;
-      book.emit('gallery:close');
-    }, 10)
-  }
-
-  gallery.on('loadpage', function(index){
-    close_gallery();
-    if(index==0){
-      apply_shadow(0);
-    }
-    else if(index==pagecount-1){
-      apply_shadow(pagecount-1);
-    }
-    lastpageelem.hide();
-    book.animate_index(index);
-  })
-
 
   /*
   
@@ -268,20 +224,6 @@ module.exports = function storytimeisland_book(options){
       })
       shadowloaded = true;
     }, 10)
-  }
-
-  book.togglegallery = function(){
-    if(gallery.active){
-      close_gallery();
-    }
-    else{
-      open_gallery(); 
-    }
-  }
-
-  book.resetgallery = function(){
-    gallery.active = false;
-    gallery.$elem.fadeOut();
   }
 
 
@@ -473,8 +415,6 @@ module.exports = function storytimeisland_book(options){
         book.emit('view:page', index);
       }
 
-      gallery.set_current_page(index);
-
       currentindex = index;
     }
     
@@ -612,19 +552,15 @@ module.exports = function storytimeisland_book(options){
 
         book.dragging = false;
 
-        if(gallery.active){
-          gallery.animate(ev.direction=='left' ? 1 : -1);
+     
+        if(book.animating || book.loading){
+          book.triggernext = function(){
+            book.animate_direction(ev.direction=='left' ? 1 : -1);
+          }
+          return;
         }
         else{
-          if(book.animating || book.loading){
-            book.triggernext = function(){
-              book.animate_direction(ev.direction=='left' ? 1 : -1);
-            }
-            return;
-          }
-          else{
-            book.animate_direction(ev.direction=='left' ? 1 : -1);  
-          }
+          book.animate_direction(ev.direction=='left' ? 1 : -1);  
         }
         
       }
@@ -639,11 +575,7 @@ module.exports = function storytimeisland_book(options){
     hammertime.on('drag end', book.ondragend)
 
     book.ontap = function(ev){
-      if(gallery.active){
-        gallery.tap(ev);
-        return;
-      }
-
+      
       var elem = ev.originalEvent.srcElement;
 
       var book = $(elem).closest('#book');
@@ -663,15 +595,6 @@ module.exports = function storytimeisland_book(options){
     }
 
     hammertime.on('tap', book.ontap)
-
-    hammertime.on('swipe', function(ev){
-
-      if(gallery.active && ev.direction=='up'){
-        close_gallery();
-        return;
-      }
-
-    })
   }
 
   book.media = media;
