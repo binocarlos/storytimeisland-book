@@ -19,7 +19,8 @@
   "main": "index.js",
   "scripts": [
     "index.js",
-    "template.js"
+    "template.js",
+    "hammer.js"
   ],
   "remotes": []
 }

@@ -10,6 +10,8 @@ var TextHighlighter = require('storytimeisland-texthighlighter');
 var Gallery = require('storytimeisland-gallery');
 var template = require('./template');
 
+require('./hammer')
+
 /*
 
  
